@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gymio/login_page.dart';
+import 'package:gymio/signup_page.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -13,13 +15,13 @@ class InitialPage extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(flex: 3),
-              
+
               // Área do Logo (Ícone + Texto)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.bar_chart_rounded, 
+                    Icons.bar_chart_rounded,
                     size: 60,
                     color: Color(0xFF007BFF),
                   ),
@@ -42,7 +44,10 @@ class InitialPage extends StatelessWidget {
               _buildButton(
                 label: 'Login',
                 onPressed: () {
-                  // Ação de login
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignInPage()),
+                  );
                 },
               ),
 
@@ -52,10 +57,14 @@ class InitialPage extends StatelessWidget {
               _buildButton(
                 label: 'Cadastre-se',
                 onPressed: () {
-                  // Ação de cadastro
+                  // Comando para navegar para a tela de cadastro
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  );
                 },
               ),
-              
+
               const Spacer(flex: 1),
             ],
           ),
@@ -65,7 +74,10 @@ class InitialPage extends StatelessWidget {
   }
 
   // Helper para criar os botões idênticos
-  Widget _buildButton({required String label, required VoidCallback onPressed}) {
+  Widget _buildButton({
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 55,
@@ -81,10 +93,7 @@ class InitialPage extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
     );
