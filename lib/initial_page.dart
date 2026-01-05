@@ -19,7 +19,7 @@ class InitialPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.bar_chart_rounded, // Ícone que remete ao gráfico da imagem
+                    Icons.bar_chart_rounded, 
                     size: 60,
                     color: Color(0xFF007BFF),
                   ),

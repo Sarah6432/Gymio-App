@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primaryColor: const Color(0xFF007BFF),
       ),
-      // Aqui você define a InitialPage como a tela de entrada
       home: const InitialPage(),
     );
   }
