@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymio/dashboard_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -15,7 +16,7 @@ class SignInPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Sign In',
+          'Entrar',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -26,66 +27,83 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 40),
-            
+
             _buildLabel("Email"),
-            _buildTextField(hint: "example@example.com"),
-            
+            _buildTextField(hint: "exemplo@exemplo.com"),
+
             const SizedBox(height: 20),
-            
-            _buildLabel("Password"),
-            _buildTextField(hint: "Password", isPassword: true),
-            
+
+            _buildLabel("Senha"),
+            _buildTextField(hint: "senha", isPassword: true),
+
             const SizedBox(height: 30),
-            
+
             // Botão Continue
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardPage(),
+                    ),
+                    (route) => false, // Remove todas as telas anteriores
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0059B3),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   elevation: 0,
                 ),
-                child: const Text("Continue", style: TextStyle(color: Colors.white, fontSize: 16)),
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ),
             ),
-            
+
             Center(
               child: TextButton(
                 onPressed: () {},
-                child: const Text("Forgot Password?", style: TextStyle(color: Colors.black54)),
+                child: const Text(
+                  "Esqueceu sua senha?",
+                  style: TextStyle(color: Colors.black54),
+                ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Divisor "or"
             Row(
               children: [
                 const Expanded(child: Divider(thickness: 1)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("or", style: TextStyle(color: Colors.grey[600])),
+                  child: Text("ou", style: TextStyle(color: Colors.grey[600])),
                 ),
                 const Expanded(child: Divider(thickness: 1)),
               ],
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // Botões Sociais
             _buildSocialButton(
-              label: "Continue with Google",
-              iconPath: Icons.g_mobiledata, // Substitua por imagem real se tiver
+              label: "Continuar com o Google",
+              iconPath:
+                  Icons.g_mobiledata, // Substitua por imagem real se tiver
               onPressed: () {},
             ),
-            
+
             const SizedBox(height: 15),
-            
+
             _buildSocialButton(
-              label: "Continue with Facebook",
+              label: "Continuar com o facebook",
               iconPath: Icons.facebook,
               iconColor: Colors.blue,
               onPressed: () {},
@@ -99,7 +117,14 @@ class SignInPage extends StatelessWidget {
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
-      child: Text(text, style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w500)),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.grey,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 
@@ -109,25 +134,47 @@ class SignInPage extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        suffixIcon: isPassword ? const Icon(Icons.visibility_off_outlined, color: Colors.grey) : null,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: const BorderSide(color: Colors.black)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: const BorderSide(color: Colors.black87)),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
+        suffixIcon:
+            isPassword
+                ? const Icon(Icons.visibility_off_outlined, color: Colors.grey)
+                : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.black),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.black87),
+        ),
       ),
     );
   }
 
-  Widget _buildSocialButton({required String label, required IconData iconPath, Color? iconColor, required VoidCallback onPressed}) {
+  Widget _buildSocialButton({
+    required String label,
+    required IconData iconPath,
+    Color? iconColor,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 55,
       child: OutlinedButton.icon(
         onPressed: onPressed,
         icon: Icon(iconPath, color: iconColor ?? Colors.red, size: 28),
-        label: Text(label, style: const TextStyle(color: Colors.black, fontSize: 15)),
+        label: Text(
+          label,
+          style: const TextStyle(color: Colors.black, fontSize: 15),
+        ),
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.black87),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
       ),
     );

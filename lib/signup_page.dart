@@ -26,19 +26,19 @@ class SignUpPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFieldLabel("Email"),
-            _buildTextField(hint: "Example"),
+            _buildTextField(hint: "exemplo@exemplo.com"),
             
             const SizedBox(height: 16),
-            _buildFieldLabel("Birthday"),
+            _buildFieldLabel("Data De Nascimento"),
             _buildTextField(hint: "03/16/1999"),
             
             const SizedBox(height: 16),
-            _buildFieldLabel("Password"),
-            _buildTextField(hint: "", isPassword: true),
+            _buildFieldLabel("Senha"),
+            _buildTextField(hint: "Senha", isPassword: true),
             
             const SizedBox(height: 16),
-            _buildFieldLabel("Confirm Password"),
-            _buildTextField(hint: "Password", isPassword: true),
+            _buildFieldLabel("Confirmar Senha"),
+            _buildTextField(hint: "Confirmar Senha", isPassword: true),
             
             const SizedBox(height: 12),
             // Requisito de senha
@@ -48,7 +48,7 @@ class SignUpPage extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    "Password must be at least 8 character, uppercase, lowercase, and unique code like #%!",
+                    "Senha deve ter pelo menos 8 caracteres, letras maiúsculas, minúsculas e caracteres especiais como #%!",
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ),
@@ -58,7 +58,7 @@ class SignUpPage extends StatelessWidget {
             const SizedBox(height: 32),
             // Termos e Condições
             Text(
-              "By click the agree and continue button, you're agree to Movees' Terms and Service and acknowledge the Privacy and Policy",
+              "Ao clicar no botão 'Concordar e continuar', você concorda com os Termos e Serviços da Movees e reconhece a Política de Privacidade",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
@@ -74,7 +74,7 @@ class SignUpPage extends StatelessWidget {
                   backgroundColor: const Color(0xFF0059B3),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 ),
-                child: const Text("Agree and continue", style: TextStyle(color: Colors.white, fontSize: 16)),
+                child: const Text("Concordar e continuar", style: TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ),
           ],

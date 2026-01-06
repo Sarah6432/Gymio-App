@@ -42,7 +42,7 @@ class InitialPage extends StatelessWidget {
 
               // Botão de Login
               _buildButton(
-                label: 'Login',
+                label: 'Entrar',
                 onPressed: () {
                   Navigator.push(
                     context,
