@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'calendar_page.dart';
@@ -14,9 +15,27 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
+  
+  User? _user = Supabase.instance.client.auth.currentUser;
+  late final StreamSubscription<AuthState> _authSubscription;
 
-  // Pegando os dados do usuário atual do Supabase
-  final User? _user = Supabase.instance.client.auth.currentUser;
+  @override
+  void initState() {
+    super.initState();
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      if (mounted) {
+        setState(() {
+          _user = data.session?.user ?? Supabase.instance.client.auth.currentUser;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
+  }
 
   final List<Widget> _pages = [
     const MainDashboardContent(),
@@ -25,6 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
     const ProfileContent(),
   ];
 
+  // Títulos da AppBar em Português
   final List<String> _titles = [
     'Gymio',
     'Agenda de Aulas',
@@ -34,27 +54,28 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String userName = _user?.userMetadata?['display_name'] ?? "Usuário";
+    final String userPhoto = _user?.userMetadata?['avatar_url'] ?? 
+        "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
-          _titles[_selectedIndex],
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
+        title: Text(
+          _titles[_selectedIndex],
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         actions: [
-          // Ícone de perfil no topo como na foto
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              child: const Icon(Icons.person, color: Colors.white),
+              radius: 18,
+              backgroundColor: Colors.grey[200],
+              backgroundImage: NetworkImage(userPhoto),
             ),
           )
         ],
@@ -64,13 +85,15 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: Color(0xFF0059B3)),
-              currentAccountPicture: const CircleAvatar(
+              currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 40, color: Color(0xFF0059B3)),
+                backgroundImage: NetworkImage(userPhoto),
               ),
-              // Exibe o email real do usuário logado
-              accountName: const Text("Bem-vindo(a)"),
-              accountEmail: Text(_user?.email ?? "usuario@exemplo.com"),
+              accountName: Text(
+                userName,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              accountEmail: Text(_user?.email ?? ""),
             ),
             _buildDrawerItem(Icons.home_filled, "Início", 0),
             _buildDrawerItem(Icons.calendar_month, "Agenda", 1),
@@ -103,7 +126,6 @@ class _DashboardPageState extends State<DashboardPage> {
       selected: _selectedIndex == index,
       onTap: () async {
         if (index == -1) {
-          // Lógica de Sair corrigida com Supabase
           await Supabase.instance.client.auth.signOut();
           if (mounted) {
             Navigator.pushAndRemoveUntil(
@@ -129,19 +151,20 @@ class MainDashboardContent extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Alinhado à esquerda
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
-          const Text(
-            'Keep on the\ngood work!',
-            textAlign: TextAlign.center, // Centralizado como na foto
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          const Center(
+            child: Text(
+              'Continue com o\nbom trabalho!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(height: 25),
-          // Barra de busca estilizada
           TextField(
             decoration: InputDecoration(
-              hintText: 'Search your programs...',
+              hintText: 'Buscar seus treinos...',
               prefixIcon: const Icon(Icons.search),
               filled: true,
               fillColor: Colors.grey[100],
@@ -154,21 +177,21 @@ class MainDashboardContent extends StatelessWidget {
           const SizedBox(height: 35),
           const Center(
             child: Text(
-              'For You',
+              'Para Você',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 20),
           _card(
-            'Upper Body Workout',
-            '12 Exercises | 40 Min',
-            const Color(0xFF0059B3),
+            'Treino de Membros Superiores', 
+            '12 Exercícios | 40 Min', 
+            const Color(0xFF0059B3)
           ),
           const SizedBox(height: 20),
           _card(
-            'Lower Body Workout',
-            '10 Exercises | 35 Min',
-            const Color(0xFF4A90FF), // Azul mais claro como o da foto
+            'Treino de Membros Inferiores', 
+            '10 Exercícios | 35 Min', 
+            const Color(0xFF4A90FF)
           ),
           const SizedBox(height: 20),
         ],
@@ -178,7 +201,7 @@ class MainDashboardContent extends StatelessWidget {
 
   Widget _card(String title, String subtitle, Color color) {
     return Container(
-      width: double.infinity, // Ocupa a largura toda
+      width: double.infinity,
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: color,
@@ -188,17 +211,13 @@ class MainDashboardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            title, 
+            style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)
           ),
           const SizedBox(height: 5),
           Text(
-            subtitle,
-            style: const TextStyle(color: Colors.white70, fontSize: 16),
+            subtitle, 
+            style: const TextStyle(color: Colors.white70, fontSize: 16)
           ),
           const SizedBox(height: 20),
           ElevatedButton(
@@ -206,15 +225,9 @@ class MainDashboardContent extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: color,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             ),
-            child: const Text(
-              'Start',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: const Text('Começar', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
