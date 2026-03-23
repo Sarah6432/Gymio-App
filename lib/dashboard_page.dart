@@ -5,6 +5,8 @@ import 'calendar_page.dart';
 import 'statistics_page.dart';
 import 'profile_page.dart';
 import 'initial_page.dart';
+import 'package:gymio/models/aula.dart';
+import 'package:gymio/services/aulas_repository.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -143,60 +145,137 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 }
 
-class MainDashboardContent extends StatelessWidget {
+class MainDashboardContent extends StatefulWidget {
   const MainDashboardContent({super.key});
 
   @override
+  State<MainDashboardContent> createState() => _MainDashboardContentState();
+}
+
+class _MainDashboardContentState extends State<MainDashboardContent> {
+  final _repo = AulasRepository();
+  List<Aula> _aulas = [];
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final list = await _repo.fetchAll();
+      if (mounted) {
+        setState(() {
+          _aulas = list;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          const Center(
-            child: Text(
-              'Continue com o\nbom trabalho!',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 25),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Buscar seus treinos...',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide.none,
+    return RefreshIndicator(
+      onRefresh: _load,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            const Center(
+              child: Text(
+                'Continue com o\nbom trabalho!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-          const SizedBox(height: 35),
-          const Center(
-            child: Text(
-              'Para Você',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            const SizedBox(height: 25),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Buscar seus treinos...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          _card(
-            'Treino de Membros Superiores', 
-            '12 Exercícios | 40 Min', 
-            const Color(0xFF0059B3)
-          ),
-          const SizedBox(height: 20),
-          _card(
-            'Treino de Membros Inferiores', 
-            '10 Exercícios | 35 Min', 
-            const Color(0xFF4A90FF)
-          ),
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 35),
+            const Center(
+              child: Text(
+                'Aulas disponíveis',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (_loading)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            if (_error != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  _error!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            if (!_loading && _error == null && _aulas.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Center(
+                  child: Text(
+                    'Nenhuma aula cadastrada ainda.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black54, fontSize: 16),
+                  ),
+                ),
+              ),
+            if (!_loading && _error == null && _aulas.isNotEmpty)
+              ..._aulas.asMap().entries.map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: _aulaCard(entry.value, entry.key),
+                    ),
+                  ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
+  }
+
+  static const _cardColors = [
+    Color(0xFF0059B3),
+    Color(0xFF4A90FF),
+  ];
+
+  Widget _aulaCard(Aula a, int index) {
+    final subtitle =
+        '${a.instrutor} · ${a.diaSemana} ${a.horario} · ${a.alunosInscritos}/${a.capacidade}';
+    final color = _cardColors[index % _cardColors.length];
+    return _card(a.nome, subtitle, color);
   }
 
   Widget _card(String title, String subtitle, Color color) {
@@ -211,13 +290,17 @@ class MainDashboardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title, 
-            style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 5),
           Text(
-            subtitle, 
-            style: const TextStyle(color: Colors.white70, fontSize: 16)
+            subtitle,
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
@@ -225,9 +308,14 @@ class MainDashboardContent extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: color,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
-            child: const Text('Começar', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Começar',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
