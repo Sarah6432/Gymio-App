@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gymio/login_page.dart';
-import 'package:gymio/signup_page.dart';
+import 'package:gymio/features/auth/presentation/pages/login_page.dart';
+import 'package:gymio/features/auth/presentation/pages/signup_page.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});

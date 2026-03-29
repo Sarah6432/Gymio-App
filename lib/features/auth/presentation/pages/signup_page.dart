@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dashboard_page.dart';
+import '../../../../dashboard_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,7 +14,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _birthDateController = TextEditingController();
-  final _nameController = TextEditingController(); // Novo: Controller para o Nome
+  final _nameController =
+      TextEditingController(); // Novo: Controller para o Nome
 
   bool _isLoading = false;
 
@@ -38,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     try {
       final supabase = Supabase.instance.client;
-      
+
       // Realiza o cadastro enviando o nome e uma foto padrão nos metadados
       await supabase.auth.signUp(
         email: email,
@@ -46,7 +47,8 @@ class _SignUpPageState extends State<SignUpPage> {
         data: {
           'display_name': name,
           'birthdate': _birthDateController.text,
-          'avatar_url': 'https://cdn-icons-png.flaticon.com/512/149/149071.png', // Foto padrão
+          'avatar_url':
+              'https://cdn-icons-png.flaticon.com/512/149/149071.png', // Foto padrão
         },
       );
 
@@ -95,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
-            
+
             // Avatar Placeholder
             Center(
               child: Stack(
@@ -103,7 +105,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.grey[200],
-                    child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                    child: const Icon(
+                      Icons.person,
+                      size: 50,
+                      color: Colors.grey,
+                    ),
                   ),
                   const Positioned(
                     bottom: 0,
@@ -111,33 +117,54 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: CircleAvatar(
                       radius: 18,
                       backgroundColor: Color(0xFF0059B3),
-                      child: Icon(Icons.camera_alt, size: 18, color: Colors.white),
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 18,
+                        color: Colors.white,
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 30),
 
             _buildFieldLabel("Nome Completo"),
-            _buildTextField(hint: "Ex: João Silva", controller: _nameController),
-            
+            _buildTextField(
+              hint: "Ex: João Silva",
+              controller: _nameController,
+            ),
+
             const SizedBox(height: 16),
             _buildFieldLabel("Email"),
-            _buildTextField(hint: "exemplo@email.com", controller: _emailController),
-            
+            _buildTextField(
+              hint: "exemplo@email.com",
+              controller: _emailController,
+            ),
+
             const SizedBox(height: 16),
             _buildFieldLabel("Data de Nascimento"),
-            _buildTextField(hint: "DD/MM/AAAA", controller: _birthDateController),
-            
+            _buildTextField(
+              hint: "DD/MM/AAAA",
+              controller: _birthDateController,
+            ),
+
             const SizedBox(height: 16),
             _buildFieldLabel("Senha"),
-            _buildTextField(hint: "********", isPassword: true, controller: _passwordController),
-            
+            _buildTextField(
+              hint: "********",
+              isPassword: true,
+              controller: _passwordController,
+            ),
+
             const SizedBox(height: 16),
             _buildFieldLabel("Confirmar Senha"),
-            _buildTextField(hint: "********", isPassword: true, controller: _confirmPasswordController),
-            
+            _buildTextField(
+              hint: "********",
+              isPassword: true,
+              controller: _confirmPasswordController,
+            ),
+
             const SizedBox(height: 32),
             _buildPrimaryButton(
               label: "Cadastrar",
@@ -155,24 +182,45 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildFieldLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0, left: 12.0),
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey, fontSize: 14)),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+          color: Colors.grey,
+          fontSize: 14,
+        ),
+      ),
     );
   }
 
-  Widget _buildTextField({required String hint, bool isPassword = false, required TextEditingController controller}) {
+  Widget _buildTextField({
+    required String hint,
+    bool isPassword = false,
+    required TextEditingController controller,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
         hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: const BorderSide(color: Colors.black12)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.black12),
+        ),
       ),
     );
   }
 
-  Widget _buildPrimaryButton({required String label, VoidCallback? onPressed, bool isLoading = false}) {
+  Widget _buildPrimaryButton({
+    required String label,
+    VoidCallback? onPressed,
+    bool isLoading = false,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 55,
@@ -180,11 +228,17 @@ class _SignUpPageState extends State<SignUpPage> {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0059B3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
-        child: isLoading 
-            ? const CircularProgressIndicator(color: Colors.white)
-            : Text(label, style: const TextStyle(color: Colors.white, fontSize: 16)),
+        child:
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                  label,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
       ),
     );
   }
