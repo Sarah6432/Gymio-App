@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymio/core/services/auth_service.dart';
+import 'package:gymio/features/auth/presentation/viewModels/auth_viewmodel.dart';
 import 'package:gymio/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:gymio/features/auth/presentation/widgets/auth_text_field_label.dart';
+import 'package:gymio/features/auth/presentation/widgets/avatar_picker.dart';
 import 'package:gymio/features/auth/presentation/widgets/primary_button.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../dashboard_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,57 +22,50 @@ class _SignUpPageState extends State<SignUpPage> {
   final _nameController =
       TextEditingController(); // Novo: Controller para o Nome
 
-  bool _isLoading = false;
+  late AuthViewmodel _viewModel;
+  late VoidCallback _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = AuthViewmodel(AuthService());
+
+    _listener = () => setState(() {});
+
+    _viewModel.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    _viewModel.removeListener(_listener);
+    _viewModel.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _birthDateController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
 
   Future<void> _handleSignUp() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-    final name = _nameController.text.trim();
+    final success = await _viewModel.signUp(
+      _nameController.text.trim(),
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+      _confirmPasswordController.text.trim(),
+    );
 
-    if (email.isEmpty || password.isEmpty || name.isEmpty) {
-      _showError("Preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    if (password != confirmPassword) {
-      _showError("As senhas não coincidem.");
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final supabase = Supabase.instance.client;
-
-      // Realiza o cadastro enviando o nome e uma foto padrão nos metadados
-      await supabase.auth.signUp(
-        email: email,
-        password: password,
-        data: {
-          'display_name': name,
-          'birthdate': _birthDateController.text,
-          'avatar_url':
-              'https://cdn-icons-png.flaticon.com/512/149/149071.png', // Foto padrão
-        },
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Cadastro realizado com sucesso!")),
       );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Cadastro realizado com sucesso!")),
-        );
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const DashboardPage()),
-          (route) => false,
-        );
-      }
-    } on AuthException catch (error) {
-      _showError(error.message);
-    } catch (error) {
-      _showError("Ocorreu um erro inesperado.");
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardPage()),
+        (route) => false,
+      );
+    } else if (_viewModel.errorMessage != null) {
+      _showError(_viewModel.errorMessage!);
     }
   }
 
@@ -101,35 +96,8 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 30),
 
-            // Avatar Placeholder
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey[200],
-                    child: const Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Color(0xFF0059B3),
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            AvatarPicker(), //TODO passar função de onTap com Supabase depois
+
             const SizedBox(height: 30),
 
             AuthTextFieldLabel(label: "Nome Completo"),
@@ -165,8 +133,8 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 32),
             PrimaryButton(
               label: "Cadastrar",
-              onPressed: _isLoading ? null : _handleSignUp,
-              isLoading: _isLoading,
+              onPressed: _viewModel.isLoading ? null : _handleSignUp,
+              isLoading: _viewModel.isLoading,
             ),
             const SizedBox(height: 40),
           ],

@@ -9,6 +9,49 @@ class AuthViewmodel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  Future<bool> signUp(
+    String name,
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
+    errorMessage = null;
+
+    if (email.isEmpty || password.isEmpty || name.isEmpty) {
+      errorMessage = "Preencha todos os campos obrigatórios";
+      notifyListeners();
+      return false;
+    }
+
+    if (password != confirmPassword) {
+      errorMessage = "As senhas não coincidem";
+      notifyListeners();
+      return false;
+    }
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      await _authService.signUp(
+        name: name,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+        birthDate: '',
+      );
+
+      return true;
+    } catch (e) {
+      errorMessage = 'Erro ao criar conta';
+
+      return false;
+    } finally {
+      isLoading = true;
+      notifyListeners();
+    }
+  }
+
   Future<bool> signIn(String email, String password) async {
     isLoading = true;
     errorMessage = null;
