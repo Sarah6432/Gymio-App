@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gymio/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:gymio/features/auth/presentation/widgets/auth_text_field_label.dart';
+import 'package:gymio/features/auth/presentation/widgets/primary_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../dashboard_page.dart';
 
@@ -129,44 +132,38 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 30),
 
-            _buildFieldLabel("Nome Completo"),
-            _buildTextField(
-              hint: "Ex: João Silva",
-              controller: _nameController,
-            ),
+            AuthTextFieldLabel(label: "Nome Completo"),
+            AuthTextField(hint: "Ex: João Silva", controller: _nameController),
 
             const SizedBox(height: 16),
-            _buildFieldLabel("Email"),
-            _buildTextField(
+            AuthTextFieldLabel(label: "Email"),
+            AuthTextField(
               hint: "exemplo@email.com",
               controller: _emailController,
             ),
 
             const SizedBox(height: 16),
-            _buildFieldLabel("Data de Nascimento"),
-            _buildTextField(
-              hint: "DD/MM/AAAA",
-              controller: _birthDateController,
-            ),
+            AuthTextFieldLabel(label: "Data de Nascimento"),
+            AuthTextField(hint: "DD/MM/AAAA", controller: _birthDateController),
 
             const SizedBox(height: 16),
-            _buildFieldLabel("Senha"),
-            _buildTextField(
+            AuthTextFieldLabel(label: "Senha"),
+            AuthTextField(
               hint: "********",
               isPassword: true,
               controller: _passwordController,
             ),
 
             const SizedBox(height: 16),
-            _buildFieldLabel("Confirmar Senha"),
-            _buildTextField(
+            AuthTextFieldLabel(label: "Confirmar Senha"),
+            AuthTextField(
               hint: "********",
               isPassword: true,
               controller: _confirmPasswordController,
             ),
 
             const SizedBox(height: 32),
-            _buildPrimaryButton(
+            PrimaryButton(
               label: "Cadastrar",
               onPressed: _isLoading ? null : _handleSignUp,
               isLoading: _isLoading,
@@ -174,71 +171,6 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 40),
           ],
         ),
-      ),
-    );
-  }
-
-  // Widgets auxiliares (mesmos do seu código original)
-  Widget _buildFieldLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, left: 12.0),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          color: Colors.grey,
-          fontSize: 14,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String hint,
-    bool isPassword = false,
-    required TextEditingController controller,
-  }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPassword,
-      decoration: InputDecoration(
-        hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: Colors.black12),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPrimaryButton({
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0059B3),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child:
-            isLoading
-                ? const CircularProgressIndicator(color: Colors.white)
-                : Text(
-                  label,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
       ),
     );
   }

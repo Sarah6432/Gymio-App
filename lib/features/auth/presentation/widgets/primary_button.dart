@@ -18,7 +18,19 @@ class PrimaryButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: onPressed,
-        child: isLoading ? const CircularProgressIndicator() : Text(label),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0059B3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child:
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                  label,
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
       ),
     );
   }
