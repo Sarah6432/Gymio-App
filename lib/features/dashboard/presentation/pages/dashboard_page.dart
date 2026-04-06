@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymio/calendar_page.dart';
+import 'package:gymio/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:gymio/features/classes/presentation/pages/classes_view.dart';
 import 'package:gymio/features/dashboard/presentation/viewModels/dashboard_viewmodel.dart';
 import 'package:gymio/features/dashboard/presentation/widgets/drawer_item.dart';
@@ -18,7 +18,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   final List<Widget> _pages = [
     const ClassesView(),
-    const CalendarContent(),
+    const CalendarView(),
     const StatisticsContent(),
     const ProfileContent(),
   ];
