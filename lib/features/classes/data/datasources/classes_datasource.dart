@@ -1,10 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:gymio/models/aula.dart';
+import 'package:gymio/features/classes/data/models/classes_model.dart';
 
-class AulasRepository {
+class AulasRemoteDatasource {
   final SupabaseClient _client = Supabase.instance.client;
 
-  Future<List<Aula>> fetchAll() async {
+  Future<List<AulaModel>> fetchAll() async {
     final List<dynamic> rows = await _client
         .from('aulas')
         .select()
@@ -12,7 +12,7 @@ class AulasRepository {
         .order('horario', ascending: true);
 
     return rows
-        .map((e) => Aula.fromRow(Map<String, dynamic>.from(e as Map)))
+        .map((e) => AulaModel.fromRow(Map<String, dynamic>.from(e as Map)))
         .toList();
   }
 }
