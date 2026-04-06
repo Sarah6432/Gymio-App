@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymio/calendar_page.dart';
-import 'package:gymio/features/auth/presentation/pages/initial_page.dart';
 import 'package:gymio/features/classes/presentation/pages/classes_view.dart';
 import 'package:gymio/features/dashboard/presentation/viewModels/dashboard_viewmodel.dart';
 import 'package:gymio/features/dashboard/presentation/widgets/drawer_item.dart';

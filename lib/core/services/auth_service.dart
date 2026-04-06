@@ -9,7 +9,7 @@ class AuthService {
     required String birthDate,
     required String password,
     required String confirmPassword,
-    String? avatar_url,
+    String? avatarUrl,
   }) async {
     await _client.auth.signUp(
       email: email,
