@@ -1,4 +1,4 @@
-class Aula {
+class AulaModel {
   final int id;
   final String nome;
   final String instrutor;
@@ -7,7 +7,7 @@ class Aula {
   final int capacidade;
   final int alunosInscritos;
 
-  Aula({
+  AulaModel({
     required this.id,
     required this.nome,
     required this.instrutor,
@@ -17,8 +17,8 @@ class Aula {
     required this.alunosInscritos,
   });
 
-  factory Aula.fromRow(Map<String, dynamic> json) {
-    return Aula(
+  factory AulaModel.fromRow(Map<String, dynamic> json) {
+    return AulaModel(
       id: _asInt(json['id']),
       nome: json['nome']?.toString() ?? '',
       instrutor: json['instrutor']?.toString() ?? '',

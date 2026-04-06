@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymio/core/services/auth_service.dart';
-import 'package:gymio/dashboard_page.dart';
+import 'package:gymio/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:gymio/features/auth/presentation/viewModels/auth_viewmodel.dart';
 import 'package:gymio/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:gymio/features/auth/presentation/widgets/primary_button.dart';

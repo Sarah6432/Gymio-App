@@ -5,7 +5,7 @@ import 'package:gymio/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:gymio/features/auth/presentation/widgets/auth_text_field_label.dart';
 import 'package:gymio/features/auth/presentation/widgets/avatar_picker.dart';
 import 'package:gymio/features/auth/presentation/widgets/primary_button.dart';
-import '../../../../dashboard_page.dart';
+import '../../../dashboard/presentation/pages/dashboard_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

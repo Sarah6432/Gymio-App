@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gymio/features/auth/presentation/pages/login_page.dart';
-import 'package:gymio/features/auth/presentation/pages/signup_page.dart';
+import 'package:gymio/core/routes/app_routes.dart';
+import 'package:gymio/features/auth/presentation/widgets/primary_button.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -41,59 +41,27 @@ class InitialPage extends StatelessWidget {
               const Spacer(flex: 3),
 
               // Botão de Login
-              _buildButton(
+              PrimaryButton(
                 label: 'Entrar',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SignInPage()),
-                  );
+                  Navigator.pushNamed(context, AppRoutes.login);
                 },
               ),
 
               const SizedBox(height: 16),
 
               // Botão de Cadastro
-              _buildButton(
+              PrimaryButton(
                 label: 'Cadastre-se',
                 onPressed: () {
                   // Comando para navegar para a tela de cadastro
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),
-                  );
+                  Navigator.pushNamed(context, AppRoutes.signup);
                 },
               ),
 
               const Spacer(flex: 1),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  // Helper para criar os botões idênticos
-  Widget _buildButton({
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0059B3), // Azul mais escuro do botão
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
     );
