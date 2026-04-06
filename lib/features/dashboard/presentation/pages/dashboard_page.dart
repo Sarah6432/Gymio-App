@@ -3,7 +3,7 @@ import 'package:gymio/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:gymio/features/classes/presentation/pages/classes_view.dart';
 import 'package:gymio/features/dashboard/presentation/viewModels/dashboard_viewmodel.dart';
 import 'package:gymio/features/dashboard/presentation/widgets/drawer_item.dart';
-import 'package:gymio/profile_page.dart';
+import 'package:gymio/features/profile/presentation/pages/profile_view.dart';
 import 'package:gymio/statistics_page.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _DashboardPageState extends State<DashboardPage> {
     const ClassesView(),
     const CalendarView(),
     const StatisticsContent(),
-    const ProfileContent(),
+    const ProfileView(),
   ];
 
   final List<String> _titles = [
